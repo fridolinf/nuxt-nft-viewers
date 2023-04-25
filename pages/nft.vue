@@ -6,6 +6,6 @@
 import moralis from "../services/api";
 
 onMounted(async () => {
-  await moralis.getNft();
+  const nftResponses = await moralis.getNft();
 });
 </script>

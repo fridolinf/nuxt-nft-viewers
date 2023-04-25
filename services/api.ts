@@ -1,19 +1,20 @@
 import { API_BASE_URL, Header } from "./header";
+import { MoralisResponseData } from "~/interfaces/IMoralis";
 
 class MoralisServices {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
   async getNft(chainData: any, walletAddress: string) {
     try {
-      const request = await httpServices.get<any>(
-        `${API_BASE_URL}${walletAddress}/nft?chain=${chainData}`,
+      const request = await httpServices.get(
+        `${API_BASE_URL}${walletAddress}/nft?chain=${chainData}&normalizeMetadata=true&mediaItems=true`,
         Header()
       );
+      if (request.status === 200) {
+        const { data } = request;
+        return data as MoralisResponseData;
+      }
     } catch (error: any) {
-      return {
-        error: true,
-        message: error.message,
-      };
+      throw error;
     }
   }
 }
