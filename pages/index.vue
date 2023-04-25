@@ -7,9 +7,12 @@
   >
     <!-- <Web3Modal /> -->
     <div
-      class="relative z-10 text-center flex justify-center h-full"
-      v-if="!walletAddress"
+      v-if="loading"
+      class="flex flex-col justify-center items-center h-full w-full"
     >
+      <CustomLoading />
+    </div>
+    <div class="relative z-10 text-center flex justify-center h-full" v-else>
       <div class="h-full flex justify-center -z-10 fixed">
         <img :src="exodiaImage" />
       </div>
@@ -25,16 +28,14 @@
           </div>
         </div>
         <button
-          class="cursor-pointer font-bold text-2xl hover:animate-puls hover:text-black w-fit z-50 font-mono tracking-wider"
+          id="cek"
+          class="cursor-pointer font-bold text-lg hover:animate-puls hover:text-black w-fit z-50 font-mono tracking-wider md:text-2xl"
           :disabled="!metamaskInstalled"
           @click="connectWallet"
         >
-          {{ buttonText }}
+          Connect Wallet
         </button>
       </div>
-    </div>
-    <div class="relative z-10" v-else>
-      {{ walletAddress }}
     </div>
     <div
       v-show="handleChangeBg"
@@ -44,14 +45,18 @@
   </div>
 </template>
 <script setup lang="ts">
+import CustomLoading from "../components/CustomLoading.vue";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import useMetamask from "~/hooks/useMetamask";
-import exodiaImage from "assets/images/exodia.png";
+import exodiaImage from "../public/assets/images/exodia.png";
+import useMetamask from "../hooks/useMetamask";
+import { onMounted, reactive, ref } from "vue";
 let metamaskInstalled: Ref<boolean> = ref(false);
-let windowEthereum: MetaMaskInpageProvider | null =
-  process.client && window.ethereum;
+let windowEthereum: Ref<MetaMaskInpageProvider | null> = ref(
+  process.client && window.ethereum
+);
 let walletAddress: Ref<string> = ref("");
 let handleChangeBg: Ref<boolean> = ref(false);
+let loading: Ref<boolean> = ref(true);
 let handleBg = [
   "bg-green-300",
   "w-20",
@@ -65,16 +70,15 @@ let positionBg = reactive({
   left: "",
   top: "",
 });
-let buttonText: Ref<string> = ref("Connect Wallet");
 
 onMounted(async () => {
   if (process.client) {
     const { metamaskDefined, ethereum, handleAccountsChanged } = useMetamask();
+    loading.value = false;
     if (metamaskDefined) {
       metamaskInstalled.value = metamaskDefined;
-      windowEthereum = ethereum;
+      windowEthereum.value = ethereum;
     }
-
     if (metamaskInstalled) {
       try {
         const account = await ethereum.request<string>({
@@ -83,6 +87,13 @@ onMounted(async () => {
         if (account) {
           const currentAccount = handleAccountsChanged(account);
           if (currentAccount) {
+            await navigateTo({
+              path: "/nft",
+              query: {
+                chain: "eth",
+                address: currentAccount,
+              },
+            });
             walletAddress.value = currentAccount;
           }
         }
@@ -94,29 +105,35 @@ onMounted(async () => {
 });
 
 if (windowEthereum) {
-  console.log(windowEthereum, "bababa");
-  windowEthereum.on("accountsChanged", (accounts: any | string[]) => {
-    if (accounts && accounts[0]) {
-      console.log(accounts, "asccc");
-      walletAddress.value = accounts[0];
-    } else {
-      walletAddress.value = "";
-    }
-  });
+  windowEthereum &&
+    windowEthereum.value &&
+    windowEthereum.value.on("accountsChanged", (accounts: any | string[]) => {
+      if (accounts && accounts[0]) {
+        walletAddress.value = accounts[0];
+      } else {
+        walletAddress.value = "";
+      }
+    });
 }
 
 const connectWallet = async () => {
-  if (windowEthereum) {
+  if (windowEthereum && windowEthereum.value) {
     try {
-      const accounts = await windowEthereum.request<string[]>({
+      const accounts = await windowEthereum.value.request<string[]>({
         method: "eth_requestAccounts",
       });
       if (accounts && accounts[0]) {
         walletAddress.value = accounts[0];
+        await navigateTo({
+          path: "/nft",
+          query: {
+            chain: "eth",
+            address: accounts[0],
+          },
+        });
       }
     } catch (error) {
       console.log(error, "error");
-      buttonText.value = "See Metamask";
     }
   }
 };
