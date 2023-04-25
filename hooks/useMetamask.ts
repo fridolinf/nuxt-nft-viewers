@@ -19,6 +19,7 @@ export default function useMetamask() {
   function handleAccountsChanged(accounts: string) {
     if (accounts.length === 0) {
       console.log("Please connect to MetaMask.");
+      return "";
     } else if (accounts[0] !== currentAccount) {
       return accounts[0];
     }
