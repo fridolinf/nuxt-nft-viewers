@@ -42,4 +42,5 @@ export type MoralisMetadata = {
   image: string;
   external_url: string;
   background_color: string;
+  collectionName: string;
 };
