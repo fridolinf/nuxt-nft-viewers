@@ -4,7 +4,11 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
   },
-
+  runtimeConfig: {
+    public: {
+      moralis: process.env.MORALIS_WEB3_API_KEY,
+    },
+  },
   app: {
     pageTransition: { name: "page", mode: "out-in" },
   },
