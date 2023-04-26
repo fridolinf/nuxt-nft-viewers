@@ -1,5 +1,6 @@
 <template>
   <div
+    id="nft-card"
     v-for="(nft, i) in cardData as MoralisMetadata[]"
     :key="i"
     class="m-3 shadow-lg shadow-black rounded-md p-2 bg-white"
@@ -41,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { MoralisMetadata } from "~/interfaces/IMoralis";
+import { MoralisMetadata } from "../interfaces/IMoralis";
 
 defineProps({
   cardData: { type: Array, required: true },

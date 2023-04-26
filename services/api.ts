@@ -1,5 +1,6 @@
 import { API_BASE_URL, Header } from "./header";
 import { MoralisResponseData } from "../interfaces/IMoralis";
+import httpServices from "../utils/httpServices";
 
 class MoralisServices {
   constructor() {}

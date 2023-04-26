@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-row gap-4 flex py-2">
+  <div id="loading" class="flex-row gap-4 flex py-2">
     <span
       v-for="a in Array(3)"
       class="animate-ping bg-red-500 rounded-t-xl p-1"

@@ -1,5 +1,4 @@
 const API_BASE_URL = "https://deep-index.moralis.io/api/v2/";
-
 /**
  * This function returns headers with an API key for making requests to a server.
  * @returns The code snippet is defining a function component named `Header` that returns an object

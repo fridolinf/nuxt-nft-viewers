@@ -49,8 +49,10 @@ import useMetamask from "../hooks/useMetamask";
 import moralis from "../services/api";
 import { tabs } from "../common/tabs";
 import { MoralisMetadata } from "../interfaces/IMoralis";
-const route = useRoute();
+import { useRoute } from "vue-router";
+import { onMounted, reactive, ref, onBeforeMount } from "vue";
 
+const route = useRoute();
 const tabsData = reactive({ tabs });
 const cardData = reactive({
   nftData: [] as MoralisMetadata[],

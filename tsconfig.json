@@ -3,5 +3,6 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "types": ["jest"]
-  }
+  },
+  "exclude": ["./cypress.config.ts", "cypress", "**/*.cy.ts"]
 }

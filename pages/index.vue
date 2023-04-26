@@ -12,11 +12,15 @@
       <CustomLoading />
     </div>
     <div class="relative z-10 text-center flex justify-center h-full" v-else>
-      <div class="h-full flex justify-center -z-10 fixed">
-        <img :src="exodiaImage" />
+      <div class="h-screen flex justify-center -z-10 absolute">
+        <nuxt-img
+          :src="'../public/assets/images/exodia.png'"
+          quality="20"
+          loading="lazy"
+        />
       </div>
-      <div class="h-screen justify-center flex items-center w-full">
-        <div class="fixed">
+      <div class="h-full justify-center flex items-center w-full mt-10">
+        <div class="absolute" id="pulse">
           <div class="relative flex flex-row flex-shrink gap-10">
             <div
               class="bg-red-500 w-24 h-24 -z-10 animate-pulse rounded-full blur-xl"
@@ -43,12 +47,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import CustomLoading from "../components/CustomLoading.vue";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import exodiaImage from "../public/assets/images/exodia.png";
-import useMetamask from "../hooks/useMetamask";
-import { handleBg } from "../common/background";
 import { onMounted, reactive, ref } from "vue";
+import { handleBg } from "../common/background";
+import CustomLoading from "../components/CustomLoading.vue";
+import useMetamask from "../hooks/useMetamask";
+
 const metamaskInstalled: Ref<boolean> = ref(false);
 const windowEthereum: Ref<MetaMaskInpageProvider | null> = ref(
   process.client && window.ethereum
