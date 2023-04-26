@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot Index Page Snapshot index page component 1`] = `
+"<div class="bg-neutral-800 text-white h-screen p-10">
+  <div class="flex flex-col justify-center items-center h-full w-full">
+    <div id="loading" class="flex-row gap-4 flex py-2"><span class="animate-ping bg-red-500 rounded-t-xl p-1"></span><span class="animate-ping bg-red-500 rounded-t-xl p-1"></span><span class="animate-ping bg-red-500 rounded-t-xl p-1"></span></div>
+    <div class="flex flex-row gap-2">
+      <p>Loading</p><span class="animate-bounce h-3 w-2">.</span><span class="animate-bounce h-3 w-2">.</span><span class="animate-bounce h-3 w-2">.</span>
+    </div>
+  </div>
+  <div class="" style="display: none;"></div>
+</div>"
+`;
