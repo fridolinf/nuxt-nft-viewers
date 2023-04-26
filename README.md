@@ -1,42 +1,79 @@
-# Nuxt 3 Minimal Starter
+<h1 align="center" id="title">Nuxt Nft Viewer</h1>
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+<p align="center"><img src="https://socialify.git.ci/fridolinf/nuxt-nft-viewers/image?font=Raleway&amp;language=1&amp;logo=https%3A%2F%2Fmiro.medium.com%2Fv2%2Fresize%3Afit%3A1000%2F1*qJppTMduXXhjgU2tZt9SfQ.png&amp;name=1&amp;owner=1&amp;theme=Light" alt="project-image"></p>
 
-## Setup
+<p id="description">Web to see nft on various chains under Ethereum (EVM) using the APIs from Moralis. This project also uses a wallet connection to metamask <b>natively</b> without the help of libraries such as <b>wagmi</b> or <b>web3modal</b></p>
 
-Make sure to install the dependencies:
+<h2>🚀 Demo</h2>
 
-```bash
-# yarn
-yarn install
+[https://nuxt-nft-viewers.vercel.app/](https://nuxt-nft-viewers.vercel.app/)
 
-# npm
-npm install
+<h2>Project Screenshots:</h2>
 
-# pnpm
-pnpm install
+<img src="https://drive.google.com/uc?id=1dOujCkZN8NqlWC_G8MmYeBOebkq6IOaZ" alt="project-screenshot" width="1000" height="500/">
+<a href="https://drive.google.com/drive/u/0/folders/1kSBereHB3Z0l29WFT7sQl833MJIgUYn9">More Screenshot</a>
+
+  
+  
+<h2>🧐 Features</h2>
+
+Here're some of the project's best features:
+
+*   See nft assets in Evm
+*   Connect metamask natively
+*   Handle account event with metamask natively
+*   e2e with cypress
+*   unit test with jest and vue-test-utils
+*   snapshot test with jest
+*   build in typescript and nuxt 3 (latest now)
+*   animated page transition
+*   consume moralis api
+
+<h2>🛠️ Installation Steps:</h2>
+
+<p>1. clone project</p>
+
+```
+https://github.com/fridolinf/nuxt-nft-viewers.git
 ```
 
-## Development Server
+<p>2. install package</p>
 
-Start the development server on `http://localhost:3000`
-
-```bash
-npm run dev
+```
+yarn / npm install
 ```
 
-## Production
+<p>3. environtment configuration. get moralis key from moralis</p>
 
-Build the application for production:
-
-```bash
-npm run build
+```
+remove .example from .env.example and change the value with you own
 ```
 
-Locally preview production build:
+<p>4. run local</p>
 
-```bash
-npm run preview
+```
+yarn run dev
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+<p>5. unit test</p>
+
+```
+yarn run test:unit
+```
+
+<p>6. e2e</p>
+
+```
+yarn run test:e2e:dev
+```
+
+  
+  
+<h2>💻 Built with</h2>
+
+Technologies used in the project:
+
+*   Nuxt3
+*   Jest
+*   Cypress
+*   Tailwindcss
