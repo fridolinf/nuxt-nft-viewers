@@ -7,9 +7,7 @@
   >
     <div class="relative">
       <div
-        v-show="
-          nft && nft.image ? nft.image : '../public/assets/images/noimg.png'
-        "
+        v-show="nft && nft.image ? nft.image : '/assets/images/noimg.png'"
         class="bg-cyan-300 w-32 h-52 absolute md:-right-5 xl:left-2/3 -z-10 rounded-md"
       ></div>
     </div>

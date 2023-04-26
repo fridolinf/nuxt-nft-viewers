@@ -14,7 +14,7 @@
     <div class="relative z-10 text-center flex justify-center h-full" v-else>
       <div class="h-screen flex justify-center -z-10 absolute">
         <nuxt-img
-          :src="'../public/assets/images/exodia.png'"
+          :src="`/assets/images/exodia.png`"
           quality="20"
           loading="lazy"
         />
