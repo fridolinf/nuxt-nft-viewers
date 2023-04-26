@@ -5,7 +5,6 @@
     @mouseenter="onMouseEnter"
     @mousemove="detectMove"
   >
-    <!-- <Web3Modal /> -->
     <div
       v-if="loading"
       class="flex flex-col justify-center items-center h-full w-full"
@@ -28,7 +27,6 @@
           </div>
         </div>
         <button
-          id="cek"
           class="cursor-pointer font-bold text-lg hover:animate-puls hover:text-black w-fit z-50 font-mono tracking-wider md:text-2xl"
           :disabled="!metamaskInstalled"
           @click="connectWallet"
@@ -49,24 +47,17 @@ import CustomLoading from "../components/CustomLoading.vue";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import exodiaImage from "../public/assets/images/exodia.png";
 import useMetamask from "../hooks/useMetamask";
+import { handleBg } from "../common/background";
 import { onMounted, reactive, ref } from "vue";
-let metamaskInstalled: Ref<boolean> = ref(false);
-let windowEthereum: Ref<MetaMaskInpageProvider | null> = ref(
+const metamaskInstalled: Ref<boolean> = ref(false);
+const windowEthereum: Ref<MetaMaskInpageProvider | null> = ref(
   process.client && window.ethereum
 );
-let walletAddress: Ref<string> = ref("");
-let handleChangeBg: Ref<boolean> = ref(false);
-let loading: Ref<boolean> = ref(true);
-let handleBg = [
-  "bg-green-300",
-  "w-20",
-  "h-20",
-  "absolute",
-  "top-10",
-  "blur-2xl",
-  "animate-pulse",
-];
-let positionBg = reactive({
+const walletAddress: Ref<string> = ref("");
+const handleChangeBg: Ref<boolean> = ref(false);
+const loading: Ref<boolean> = ref(true);
+
+const positionBg = reactive({
   left: "",
   top: "",
 });
@@ -98,23 +89,11 @@ onMounted(async () => {
           }
         }
       } catch (error) {
-        console.log(error, "error");
+        throw error;
       }
     }
   }
 });
-
-if (windowEthereum) {
-  windowEthereum &&
-    windowEthereum.value &&
-    windowEthereum.value.on("accountsChanged", (accounts: any | string[]) => {
-      if (accounts && accounts[0]) {
-        walletAddress.value = accounts[0];
-      } else {
-        walletAddress.value = "";
-      }
-    });
-}
 
 const connectWallet = async () => {
   if (windowEthereum && windowEthereum.value) {
@@ -133,7 +112,7 @@ const connectWallet = async () => {
         });
       }
     } catch (error) {
-      console.log(error, "error");
+      throw error;
     }
   }
 };

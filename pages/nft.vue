@@ -11,7 +11,7 @@
         id="tabs"
         name="tabs"
         class="block w-full text-center capitalize text-xl rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-        :defaultValue="tabsData.tabs.find((tab, i) => i === tabIdx)?.name"
+        :defaultValue="tabsData.tabs.find((_tab, i) => i === tabIdx)?.name"
         @change="handleTab"
       >
         >
@@ -21,82 +21,18 @@
       </select>
     </div>
     <div class="hidden md:block">
-      <nav
-        class="isolate flex divide-x divide-gray-200 rounded-lg shadow"
-        aria-label="Tabs"
-      >
-        <a
-          v-for="(tab, i) in tabsData.tabs"
-          @click.prevent="handleTab(tab.name)"
-          :class="[
-            i === tabIdx ? 'text-gray-900' : 'text-gray-500',
-            i === 0 ? 'rounded-l-lg' : '',
-            i === tabsData.tabs.length - 1 ? 'rounded-r-lg' : '',
-            'group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-1 text-center text-sm md:text-xs font-medium hover:bg-gray-50 focus:z-10 capitalize',
-          ]"
-          :aria-current="i === tabIdx ? 'page' : undefined"
-          :key="i"
-          :href="tab.href"
-        >
-          <span>{{ tab.name }}</span>
-          <span
-            :class="[
-              i === tabIdx ? 'bg-indigo-500' : 'bg-transparent',
-              'absolute inset-x-0 bottom-0 h-0.5',
-            ]"
-            aria-hidden="true"
-          />
-        </a>
-      </nav>
+      <CustomNavigation
+        :tabs-data="tabsData.tabs"
+        :tab-idx="tabIdx"
+        :handle-tab="handleTab"
+      />
     </div>
     <div
       class="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-2 gap-5 md:gap-2"
       v-if="cardData.nftData.length > 0"
     >
-      <div
-        v-for="(nft, i) in cardData.nftData"
-        :key="i"
-        class="m-3 shadow-lg shadow-black rounded-md p-2 bg-white"
-      >
-        <div class="relative">
-          <div
-            v-show="
-              nft && nft.image ? nft.image : '../public/assets/images/noimg.png'
-            "
-            class="bg-cyan-300 w-32 h-52 absolute md:-right-5 xl:left-2/3 -z-10 rounded-md"
-          ></div>
-        </div>
-        <p class="text-center font-bold">
-          {{ nft && nft.collectionName ? nft.collectionName : "" }}
-        </p>
-        <nuxt-img
-          quality="50"
-          class="rounded-xl shadow-sm shadow-cyan-500 my-2 w-full"
-          loading="lazy"
-          :src="
-            nft && nft.image
-              ? nft.image.replace(
-                  'ipfs://',
-                  'https://cloudflare-ipfs.com/ipfs/'
-                )
-              : '../public/assets/images/noimg.png'
-          "
-          :alt="nft && nft.name ? nft.name : 'nft-image'"
-        />
-        <div class="text-clip">
-          <p>Metadata</p>
-          <p class="font-semibold">{{ nft.name }}</p>
-          <p>
-            {{
-              nft && nft.description
-                ? nft.description.substring(0, 150) + " " + "..."
-                : ""
-            }}
-          </p>
-        </div>
-      </div>
+      <NftCard :card-data="cardData.nftData" />
     </div>
-
     <div
       v-else
       class="flex justify-center h-screen items-center font-bold text-2xl"
@@ -115,17 +51,17 @@ import { tabs } from "../common/tabs";
 import { MoralisMetadata } from "../interfaces/IMoralis";
 const route = useRoute();
 
-let tabsData = reactive({ tabs });
-let cardData = reactive({
+const tabsData = reactive({ tabs });
+const cardData = reactive({
   nftData: [] as MoralisMetadata[],
 });
-let windowEthereum: Ref<MetaMaskInpageProvider | null> = ref(
+const windowEthereum: Ref<MetaMaskInpageProvider | null> = ref(
   process.client && window.ethereum
 );
-let tabIdx: Ref<number> = ref(0);
-let chain: Ref<string> = ref("");
-let address: Ref<string> = ref("");
-let loading: Ref<boolean> = ref(true);
+const tabIdx: Ref<number> = ref(0);
+const chain: Ref<string> = ref("");
+const address: Ref<string> = ref("");
+const loading: Ref<boolean> = ref(true);
 
 const handleTab = async (val: string | Event) => {
   let newVal: string =
@@ -155,25 +91,30 @@ const handleTab = async (val: string | Event) => {
 };
 
 onBeforeMount(async () => {
-  chain.value = route.query.chain as string;
+  chain.value = route.query.chain as string; //check query params from uri and pass to ref()
   address.value = route.query.address as string;
   if (process.client) {
+    // detect if nuxt ready
     const { ethereum, metamaskDefined } = useMetamask();
 
     if (metamaskDefined) {
       windowEthereum.value = ethereum;
     }
     try {
+      /**
+       * @account - before mount will be detect if daaps still can connect to metamask with accessing an account
+       */
       const account = await ethereum.request<string>({
         method: "eth_accounts",
       });
       if (account && account.length === 0) {
+        // if can't get an account will navigate to home pages
         await navigateTo({
           path: "/",
         });
       }
     } catch (error) {
-      console.log(error, "error");
+      throw error;
     }
   }
 });
@@ -189,7 +130,7 @@ onMounted(async () => {
       if (data && data.metadata) {
         const nftMetadata = {
           ...JSON.parse(data.metadata),
-          collectionName: data.name,
+          collectionName: data.name, //adding collection name of an Nft
         } as MoralisMetadata;
         cardData.nftData.push(nftMetadata);
       }
@@ -197,12 +138,15 @@ onMounted(async () => {
   }
   loading.value = false;
 });
-
 if (windowEthereum && windowEthereum.value) {
+  /**
+   * @windowEthereum {accountsChanges} - is method for detect if user switch their wallet address to another wallet address in metamask
+   */
   windowEthereum.value.on(
     "accountsChanged",
     async (accounts: any | string[]) => {
       if (accounts && accounts.length > 0) {
+        // if any change tabIdx will set to default 0 again and replace the query address of uri silently
         tabIdx.value = 0;
         await navigateTo({
           path: "/nft",
@@ -211,6 +155,7 @@ if (windowEthereum && windowEthereum.value) {
             address: accounts[0],
           },
         });
+        // after navigating to another uri with new address, get nft data again
         cardData.nftData = [];
         const nftResponses = await moralis.getNft("eth", accounts[0]);
         if (nftResponses && nftResponses?.result.length > 0) {
